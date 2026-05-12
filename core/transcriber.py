@@ -29,3 +29,19 @@ def transcribe_chunk(chunk_path : str, translate: bool = False)-> str:
     return result['text']
 
 
+#Transcription function to transcribe all the chunks
+def transcribe_all(chunks : list, translate : bool = False) -> str:
+
+    full_transcript = ""
+
+    for i, chunk in enumerate(chunks):
+        print(f"Transcribing chunk {i+1}")
+        text = transcribe_chunk(chunk , translate=translate)
+        full_transcript += text + " "
+    
+    print("Transcription completed")
+
+    return full_transcript
+
+
+
