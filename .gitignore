@@ -1,1 +1,6 @@
 .env*
+downloads/
+*.wav
+*.webm
+*.mp3
+*.mp4
