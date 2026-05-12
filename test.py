@@ -5,4 +5,4 @@ source = "https://youtu.be/Lg-meK5IU8Q?si=3cCwR10vggNN-qYB"
 
 chunks = process_input(source)
 
-print(transcribe_all(chunks))
+print(transcribe_all(chunks)) 
