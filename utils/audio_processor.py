@@ -5,12 +5,25 @@ from pydub import AudioSegment
 DOWNLOAD_DIR = 'downloads'
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
+# YouTube blocks known cloud server IPs (AWS, GCP etc.) with 403.
+# Using the iOS player client + its User-Agent bypasses this detection.
+_YT_HEADERS = {
+    "User-Agent": (
+        "com.google.ios.youtube/19.29.1 CFNetwork/1220.1 Darwin/20.3.0"
+    ),
+}
+_YT_EXTRACTOR_ARGS = {
+    "youtube": {
+        "player_client": ["ios", "web"],   
+    }
+}
+
+
 def download_youtube_audio(url: str) -> str:
     output_path = os.path.join(DOWNLOAD_DIR, "%(title)s.%(ext)s")
     ydl_opts = {
         "format": "bestaudio/best",
         "outtmpl": output_path,
-       
         "postprocessors": [
             {
                 "key": "FFmpegExtractAudio",
@@ -19,10 +32,20 @@ def download_youtube_audio(url: str) -> str:
             }
         ],
         "quiet": True,
+        # ── Cloud 403 bypass ──────────────────────────────────────────────
+        "http_headers":    _YT_HEADERS,
+        "extractor_args":  _YT_EXTRACTOR_ARGS,
+        "retries":         5,          # retry on transient failures
+        "fragment_retries": 5,
+        # ─────────────────────────────────────────────────────────────────
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
-        filename = ydl.prepare_filename(info).replace(".webm", ".wav").replace(".m4a", ".wav")
+        filename = (
+            ydl.prepare_filename(info)
+            .replace(".webm", ".wav")
+            .replace(".m4a", ".wav")
+        )
     return filename
 
 
