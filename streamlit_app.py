@@ -262,6 +262,11 @@ except Exception as _e:
     IMPORTS_OK = False
     _IMPORT_ERR = str(_e)
 
+if not IMPORTS_OK:
+    st.error(f"❌ Import error:\n\n`{_IMPORT_ERR}`")
+    st.info("Check your `packages.txt` and `requirements.txt`.")
+    st.stop()
+
 # ─── Session State ────────────────────────────────────────────────────────────
 for _k, _v in {
     "result":         None,
