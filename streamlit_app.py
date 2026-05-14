@@ -2,20 +2,9 @@ import streamlit as st
 import time
 import os
 import tempfile
+from dotenv import load_dotenv
 
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    pass
-
-try:
-    for key, val in st.secrets.items():
-        os.environ.setdefault(key, str(val))
-except Exception:
-    pass
-
-
+load_dotenv()
 
 # ─── MUST BE FIRST STREAMLIT CALL ────────────────────────────────────────────
 st.set_page_config(
@@ -91,7 +80,7 @@ h1,h2,h3,h4,h5,h6 {
 /* ── Hero ── */
 .hero-title {
     font-family: 'Syne', sans-serif;
-    font-size: clamp(2rem, 2.5vw, 3rem);
+    font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 800; line-height: 1.1; margin: 0;
     background: linear-gradient(135deg, #ffffff 0%, var(--accent-glow) 50%, var(--accent-2) 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -301,7 +290,7 @@ def update_step(key, state):
 with st.sidebar:
     st.markdown('<div class="hero-title" style="font-size:1.9rem">🎬 MeetFlow</div>',
                 unsafe_allow_html=True)
-    st.markdown('<div class="hero-sub">AI Video Intelligence with RAG</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-sub">AI · Video · Intelligence</div>', unsafe_allow_html=True)
     st.markdown("---")
 
     st.markdown('<span class="badge badge-purple">Input Source</span>', unsafe_allow_html=True)
@@ -375,8 +364,8 @@ if not IMPORTS_OK:
     st.stop()
 
 # ─── Main ────────────────────────────────────────────────────────────────────
-st.markdown('<div class="hero-title"> AI Assistance Panel</div>', unsafe_allow_html=True)
-st.markdown('<div class="hero-sub"> ▶ Transcribe ▶ Summarise your meetings/videos ▶ Chat with your meetings</div>',
+st.markdown('<div class="hero-title">AI Video Assistant</div>', unsafe_allow_html=True)
+st.markdown('<div class="hero-sub">Transcribe · Summarise · Chat with your meetings</div>',
             unsafe_allow_html=True)
 st.markdown("---")
 
@@ -395,11 +384,13 @@ if run_btn:
             banner.info("⚙️ Pipeline running — see sidebar for live status…")
 
             update_step("audio", "active");      bar.progress(5,  "Extracting audio…")
-            chunks = process_input(source_path)
+            chunks, transcript = process_input(source_path, language=language)
             update_step("audio", "done")
 
             update_step("transcript", "active"); bar.progress(20, "Transcribing…")
-            transcript = transcribe_all(chunks, language)
+            if transcript is None:                          # local file — run Whisper/Sarvam
+                transcript = transcribe_all(chunks, language)
+            # YouTube URL — transcript already fetched via API, skip Whisper
             update_step("transcript", "done")
 
             update_step("title", "active");      bar.progress(45, "Generating title…")
@@ -553,7 +544,7 @@ else:
                 justify-content:center;padding:5rem 2rem;text-align:center">
         <div style="font-size:4rem;margin-bottom:1rem">🎬</div>
         <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;
-                    color:var(--text);margin-bottom:0.5rem">Ready to Analyse ?</div>
+                    color:var(--text);margin-bottom:0.5rem">Ready to Analyse</div>
         <div style="color:var(--text-muted);font-size:0.85rem;max-width:380px;line-height:1.7">
             Paste a YouTube URL or upload a video/audio file in the sidebar,
             choose your language, and hit <strong>Analyse</strong> to get started.
