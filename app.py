@@ -542,7 +542,7 @@ else:
                 justify-content:center;padding:5rem 2rem;text-align:center">
         <div style="font-size:4rem;margin-bottom:1rem">🎬</div>
         <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;
-                    color:var(--text);margin-bottom:0.5rem">Ready to Analyse</div>
+                    color:var(--text);margin-bottom:0.5rem">Ready to Analyse ?</div>
         <div style="color:var(--text-muted);font-size:0.85rem;max-width:380px;line-height:1.7">
             Paste a YouTube URL or upload a video/audio file in the sidebar,
             choose your language, and hit <strong>Analyse</strong> to get started.
