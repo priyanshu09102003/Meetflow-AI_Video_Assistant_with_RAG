@@ -4,7 +4,13 @@ import os
 import tempfile
 from dotenv import load_dotenv
 
-load_dotenv()
+try:
+    for key, val in st.secrets.items():
+        os.environ.setdefault(key, str(val))
+except Exception:
+    pass
+
+load_dotenv()  
 
 # ─── MUST BE FIRST STREAMLIT CALL ────────────────────────────────────────────
 st.set_page_config(
