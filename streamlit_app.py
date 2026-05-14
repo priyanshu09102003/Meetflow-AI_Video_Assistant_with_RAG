@@ -2,7 +2,12 @@ import streamlit as st
 import time
 import os
 import tempfile
-from dotenv import load_dotenv
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 try:
     for key, val in st.secrets.items():
