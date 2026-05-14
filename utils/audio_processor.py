@@ -35,9 +35,11 @@ def download_youtube_audio(url: str) -> str:
         # ── Cloud 403 bypass ──────────────────────────────────────────────
         "http_headers":    _YT_HEADERS,
         "extractor_args":  _YT_EXTRACTOR_ARGS,
-        "retries":         5,          # retry on transient failures
+        "retries":         5,
         "fragment_retries": 5,
-        # ─────────────────────────────────────────────────────────────────
+        # ── EJS: JS runtime for YouTube challenge solving (2025 required) ─  ← ADD FROM HERE
+        "js_runtimes":       ["node"],
+        "remote_components": {"ejs:github"},
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
