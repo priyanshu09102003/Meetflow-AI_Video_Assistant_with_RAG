@@ -15,7 +15,7 @@ try:
 except Exception:
     pass
 
-load_dotenv()  
+
 
 # ─── MUST BE FIRST STREAMLIT CALL ────────────────────────────────────────────
 st.set_page_config(
