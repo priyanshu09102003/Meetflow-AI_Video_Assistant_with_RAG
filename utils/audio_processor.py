@@ -38,7 +38,7 @@ def download_youtube_audio(url: str) -> str:
         "retries":         5,
         "fragment_retries": 5,
         # ── EJS: JS runtime for YouTube challenge solving (2025 required) ─  ← ADD FROM HERE
-        "js_runtimes":       ["node"],
+        "js_runtimes":       {"node": {}},
         "remote_components": {"ejs:github"},
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
