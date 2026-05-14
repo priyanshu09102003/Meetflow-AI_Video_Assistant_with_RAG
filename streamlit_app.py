@@ -367,12 +367,6 @@ with st.sidebar:
         MP4 · MKV · MP3 · WAV · WebM<br>English via Whisper · Hindi via Sarvam AI
     </div>""", unsafe_allow_html=True)
 
-# ─── Import guard ─────────────────────────────────────────────────────────────
-if not IMPORTS_OK:
-    st.error(f"❌ Import failed: {_IMPORT_ERR}")
-    st.info("Make sure all dependencies are installed and run from the project root:\n"
-            "`PYTHONPATH=. streamlit run streamlit_app.py`")
-    st.stop()
 
 # ─── Main ────────────────────────────────────────────────────────────────────
 st.markdown('<div class="hero-title"> AI Assistance Panel</div>', unsafe_allow_html=True)
