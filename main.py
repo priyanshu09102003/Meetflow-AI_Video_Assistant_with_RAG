@@ -7,32 +7,37 @@ from core.rag_engine import build_rag_chain, ask_question
 
 load_dotenv()
 
-def run_rag_pipeline(source: str, language: str = "english") -> dict:
-    print("Starting MeetFlow pipeline...")
+def run_rag_pipeline(source : str, language:str = "english") -> dict:
+    print("starting MeetFlow pipeline...")
 
-    chunks, transcript = process_input(source, language=language)
+    chunks = process_input(source) #Creating chunks of the source
+    transcript = transcribe_all(chunks, language=language) #Transcription of all the chunks
+    print(f"Transcribed text[300 words]: {transcript[:300]}")
 
-    # If transcript came directly (YouTube URL), skip Whisper
-    if transcript is None:
-        transcript = transcribe_all(chunks, language=language)
-
-    print(f"Transcript preview: {transcript[:300]}")
-
+    #Generate the title of the summary from transcript
     title = generate_title(transcript)
+
+    #Summary of the transcript to summarise the video
     summary = summarize(transcript)
+
+    #Getting the action items from the summary(Questions, decisions etc from the video)
+
     action_items = extract_action_items(transcript)
     decisions = extract_key_decisions(transcript)
     questions = extract_questions(transcript)
+
+    #RAG CHAIN PROPS - Ask questions from the summary, chat with meeting etc
+
     rag_chain = build_rag_chain(transcript)
 
     return {
-        "title": title,
+        "title":title,
         "transcript": transcript,
         "summary": summary,
         "action_items": action_items,
         "key_decisions": decisions,
         "open_questions": questions,
-        "rag_chain": rag_chain,
+        "rag_chain": rag_chain
     }
 
 if __name__ == "__main__":

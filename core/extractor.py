@@ -1,5 +1,62 @@
-#This is for extracting some important stuffs that are stressed upon in the video:
-#1) Actionable Items, 2)Decision, 3)Important questions in the meeting
+# #This is for extracting some important stuffs that are stressed upon in the video:
+# #1) Actionable Items, 2)Decision, 3)Important questions in the meeting
+
+# from langchain_mistralai import ChatMistralAI
+# from langchain_core.prompts import ChatPromptTemplate
+# from langchain_core.output_parsers import StrOutputParser
+# from langchain_core.runnables import RunnablePassthrough, RunnableLambda
+# import os 
+
+# def get_llm():
+#     return ChatMistralAI(model = "mistral-small-latest", mistral_api_key = os.getenv("MISTRAL_API_KEY"), temperature = 0.2)
+
+
+# def build_chain(system_prompt : str):
+#     llm = get_llm()
+#     return (
+#         RunnablePassthrough() | RunnableLambda(lambda x : {"text" : x}) |ChatPromptTemplate.from_messages([
+#         ("system", system_prompt),
+#         ("human","{text}"),
+#     ]) | llm |StrOutputParser()
+#     )
+
+# #System prompt to extract actionable items
+
+# def extract_action_items(transcript:str)->str:
+#     chain = build_chain(
+#         "You are an expert meeting analyst. From the meeting transcript, "
+#         "extract all action items. For each provide:\n"
+#         "- Task description\n"
+#         "- Owner (who is responsible)\n"
+#         "- Deadline (if mentioned, else write 'Not specified')\n\n"
+#         "Format as a numbered list. If none found say 'No action items found.'"
+#     )
+
+#     return chain.invoke(transcript)
+
+# #System prompt to extract decisions of the meeting/video
+
+# def extract_key_decisions(transcript: str) -> str:
+#     chain = build_chain(
+#         "You are an expert meeting analyst. From the meeting transcript, "
+#         "extract all key decisions made. Format as a numbered list. "
+#         "If none found say 'No key decisions found.'"
+#     )
+#     return chain.invoke(transcript)
+
+# #System prompt to extract questions of the meeting/video
+
+# def extract_questions(transcript: str) -> str:
+#     chain = build_chain(
+#         "From the meeting transcript, extract all unresolved questions "
+#         "or topics needing follow-up. Format as a numbered list. "
+#         "If none found say 'No open questions found.'"
+#     )
+#     return chain.invoke(transcript)
+
+
+
+#Actionableitems , decision , questions 
 
 from langchain_mistralai import ChatMistralAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -7,8 +64,10 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 import os 
 
+
 def get_llm():
-    return ChatMistralAI(model = "mistral-small-latest", mistral_api_key = os.getenv("MISTRAL_API_KEY"), temperature = 0.2)
+    return ChatMistralAI(model = "mistral-small-latest", mistral_api_key = os.getenv("MISTRAL_API_KEY"),temperature=0.2)
+
 
 
 def build_chain(system_prompt : str):
@@ -20,11 +79,9 @@ def build_chain(system_prompt : str):
     ]) | llm |StrOutputParser()
     )
 
-#System prompt to extract actionable items
-
 def extract_action_items(transcript:str)->str:
     chain = build_chain(
-        "You are an expert meeting analyst. From the meeting transcript, "
+         "You are an expert meeting analyst. From the meeting transcript, "
         "extract all action items. For each provide:\n"
         "- Task description\n"
         "- Owner (who is responsible)\n"
@@ -34,7 +91,6 @@ def extract_action_items(transcript:str)->str:
 
     return chain.invoke(transcript)
 
-#System prompt to extract decisions of the meeting/video
 
 def extract_key_decisions(transcript: str) -> str:
     chain = build_chain(
@@ -44,7 +100,6 @@ def extract_key_decisions(transcript: str) -> str:
     )
     return chain.invoke(transcript)
 
-#System prompt to extract questions of the meeting/video
 
 def extract_questions(transcript: str) -> str:
     chain = build_chain(
