@@ -238,7 +238,8 @@ hr { border: none !important; border-top: 1px solid var(--border) !important; ma
     line-height: 1.8; max-height: 300px; overflow-y: auto;
     color: var(--text-muted); white-space: pre-wrap; word-break: break-word;
 }
-.stProgress > div > div > div { background: var(--accent) !important; }
+.stProgress > div > div > div > div { background: #3b82f6 !important; }
+.stProgress > div > div > div { background: #2a2a3a !important; }
 .stSpinner > div { border-top-color: var(--accent) !important; }
 [data-testid="stMarkdownContainer"] p { color: var(--text) !important; }
 label { color: var(--text-muted) !important; font-size: 0.8rem !important; }
@@ -392,7 +393,7 @@ if run_btn:
         banner = st.empty()
         bar    = st.empty()
         try:
-            banner.info("⚙️ Pipeline running — see sidebar for live status…")
+            banner.info("⚙️ Pipeline running — see progress bar for live status…")
 
             update_step("audio", "active");      bar.progress(5,  "Extracting audio…")
             chunks = process_input(source_path)
@@ -409,6 +410,7 @@ if run_btn:
             update_step("summary", "active");    bar.progress(58, "Summarising…")
             summary = summarize(transcript)
             update_step("summary", "done")
+            time.sleep(2) 
 
             update_step("extract", "active");    bar.progress(72, "Extracting insights…")
             action_items = extract_action_items(transcript)
@@ -458,7 +460,7 @@ if st.session_state.result:
         st.markdown(f"""
         <div class="card">
             <div class="card-title">📋 Summary</div>
-            <div class="card-content">{r['summary']}</div>
+            <div class="card-content" style="max-height:300px;overflow-y:auto;">{r['summary']}</div>
         </div>""", unsafe_allow_html=True)
     with col2:
         with st.expander("📝 Full Transcript", expanded=False):
@@ -470,25 +472,23 @@ if st.session_state.result:
                 file_name=f"{r['title'][:40].replace(' ','_')}_transcript.txt",
                 mime="text/plain", use_container_width=True)
 
-    c1, c2, c3 = st.columns(3, gap="medium")
-    with c1:
-        st.markdown(f"""
-        <div class="card">
-            <div class="card-title">✅ Action Items</div>
-            <div class="card-content">{r['action_items']}</div>
-        </div>""", unsafe_allow_html=True)
-    with c2:
-        st.markdown(f"""
-        <div class="card">
-            <div class="card-title">🔑 Key Decisions</div>
-            <div class="card-content">{r['key_decisions']}</div>
-        </div>""", unsafe_allow_html=True)
-    with c3:
-        st.markdown(f"""
-        <div class="card">
-            <div class="card-title">❓ Open Questions</div>
-            <div class="card-content">{r['open_questions']}</div>
-        </div>""", unsafe_allow_html=True)
+    extractor_cards = []
+    if r['action_items'] and "No action items found" not in r['action_items']:
+        extractor_cards.append(("✅ Action Items", r['action_items']))
+    if r['key_decisions'] and "No key decisions found" not in r['key_decisions']:
+        extractor_cards.append(("🔑 Key Decisions", r['key_decisions']))
+    if r['open_questions'] and "No open questions found" not in r['open_questions']:
+        extractor_cards.append(("❓ Open Questions", r['open_questions']))
+
+    if extractor_cards:
+        cols = st.columns(len(extractor_cards), gap="medium")
+        for col, (title, content) in zip(cols, extractor_cards):
+            with col:
+                st.markdown(f"""
+                <div class="card">
+                    <div class="card-title">{title}</div>
+                    <div class="card-content" style="max-height:250px;overflow-y:auto;">{content}</div>
+                </div>""", unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown('<div style="font-family:\'Syne\',sans-serif;font-size:1.2rem;'
